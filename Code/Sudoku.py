@@ -1,4 +1,3 @@
-
 # 
 #Sodoku consists of a 9 X 9 grid. Every row contains numbers 1 - 9 and every column has 1-9. No duplicates can exist in either row. 
 # Example of a solved one can be found here https://sandiway.arizona.edu/sudoku/examples.html
@@ -73,7 +72,6 @@ class SudokuSolver :
                 # 2.) a boolean that states whether 
                 x = Item(item)
                 Line.append(x)
-
             self.puzzle.append(Line)
         print("The puzzle was loaded as follows:")
         for row in self.puzzle :
@@ -145,7 +143,7 @@ class SudokuSolver :
         return False
  #- end of sodoku class----------------------------------------------------------------------------------------------------------------------------------------------------------       
 
-puzzle = SudokuSolver(startingPuzzle); 
+#puzzle = SudokuSolver(startingPuzzle); 
 
 
 
