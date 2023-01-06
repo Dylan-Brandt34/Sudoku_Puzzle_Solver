@@ -50,8 +50,8 @@ class Item:
 class SudokuSolver : 
     #Puzzle will hold the array of numbers 
     puzzle = []
-    rowiterator = 0
-    coliterator = 0
+    rowIterator = 0
+    colIterator = 0
     #List that will tell an iteration when all numbers have been tried (maybe a little bit different than this actually)
     triedNums = []
     squares = []
@@ -63,6 +63,7 @@ class SudokuSolver :
     def __init__(self, startingpuzzle):
         print("here is the starting puzzle")
         print(startingpuzzle)
+        self.puzzle = []
         # Nested for loop to create the starting puzzle
         for row in startingpuzzle: 
             Line = []
@@ -114,33 +115,108 @@ class SudokuSolver :
                 square2 = []
                 square3 = []
 
+    #This method will check the row and return if the item can be placed there 
+    # Takes in the row iterator and a value. Returns whether the value exists in
+    def CheckRow(self, value): 
+
+        #iterate through the row to check if value is contained in any of the items 
+        for item in self.puzzle[self.rowIterator] : 
+
+            #If the value is found, return true
+            if item.Value == value :
+                return True     
+        #if the end of the for loop is reached, then the value is not contained in the row.
+        return False
+
+    #This method will check the collumn and return if item can be place there 
+    def CheckCol(self, value):
+        for item in self.puzzle : 
+
+            #If the value is found, return true
+            if item[self.colIterator].Value == value :
+                return True     
+        #if the end of the for loop is reached, then the value is not contained in the row.
+        return False
+
+    
+    #This method will check the "square" the item is in and return whether that number can be placed 
+    def CheckBox(self, value): 
+        tempSquare = []
+        if self.rowIterator < 3 : 
+            if self.colIterator < 3: 
+                tempSquare = self.squares[0]
+            if self.colIterator > 3 and self.colIterator < 6 :
+                tempSquare = self.squares[1]
+            if self.colIterator >= 6 : 
+                tempSquare = self.squares[2]
+        if self.rowIterator > 3 and self.rowIterator < 6 : 
+            if self.colIterator < 3: 
+                tempSquare = self.squares[3]
+            if self.colIterator > 3 and self.colIterator < 6 :
+                tempSquare = self.squares[4]
+            if self.colIterator >= 6 : 
+                tempSquare = self.squares[5]
+        if self.rowIterator >= 6 : 
+            if self.colIterator < 3: 
+                tempSquare = self.squares[6]
+            if self.colIterator > 3 and self.colIterator < 6 :
+                tempSquare = self.squares[7]
+            if self.colIterator >= 6 : 
+                tempSquare = self.squares[8]
+        for item in tempSquare : 
+            if item.Value == value :
+                return True     
+        #if the end of the for loop is reached, then the value is not contained in the row.
+        return False
+       #This method will call all of the check methods and if all of them return false, then a value can be placed there 
+    def check(self, value): 
+        if self.checkRow(value) == False :
+            if self.CheckCol(value) ==False :
+                if self.CheckBox(value) == False :
+                    return False
+        else: 
+            return True
             
-      
-    #This method will control the flow of solving the puzzle. It will decide whether to place a number or not
+    # Method to iterate the puzzle solver to the right. If the column iterator has reached the end, reset it and increase the row iterator
+    def Iterate(self) : 
+        if(self.colIterator == 8) : 
+            self.colIterator = 0
+            self.rowIterator +=1 
+        else : 
+            self.colIterator +=1
+        return
+
+    # method to backtrack in the case that no number can be put into a blank space
+    # This method is called when the program realizes it has messed up 
+    def Redo(self) : 
+        if(self.colIterator == 0) :
+            self.colIterator = 8 
+            self.rowIterator -=1
+        else : 
+            self.colIterator -=1
+        return 
+            #This method will control the flow of solving the puzzle. It will decide whether to place a number or not
     def Main(self, sent):
 
+        if self.puzzle[self.rowIterator][self.colIterator].Editable  == False :
+            self.Iterate()
+            #LOOK INTO HOW TO GET AROUND BACK TRACKING TO A VALUE AND SUBMITTING THE SAME THING 
+            # EXAMPLE: 
+            # 3, 4 ,X 
+            # X doesn't work and the item before it [4] iterates from 1-4 and then selects 4 again
+            # this could cause an endless recursion cycle!!!!!!!!!!!!!!!!!!!!!!!
+        else:
+            # Begin finding a number to place in the spot 
+            for value in range(1, 10) : 
+                if self.check(value) == False : 
+                    #if false, then the value is not contained anywhere and can be placed. 
 
-        #Set up the main for the first time run through 
-        #iterate through the code from row 1 and work through the rows from left to right 
 
-        #iterate through the number 1-9 and (or x - 9 [x is the number the square was on initially]) place the first number that works into 
 
             #if no number works, back track until the first editable field is found 
         
         #proceed through main 
         return 0
-
-    #This method will check the row and return if the item can be placed there 
-    def CheckRow(self): 
-        return False
-
-    #This method will check the collumn and return if item can be place there 
-    def CheckCol(self):
-        return False
-
-    #This method will check the "square" the item is in and return whether that number can be placed 
-    def CheckBox(): 
-        return False
  #- end of sodoku class----------------------------------------------------------------------------------------------------------------------------------------------------------       
 
 #puzzle = SudokuSolver(startingPuzzle); 
