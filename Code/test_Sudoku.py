@@ -82,6 +82,8 @@ class PuzzleTest(unittest.TestCase) :
         #the value 7 should NOT exist in the top left square 
         self.assertEqual(solver.CheckBox(7), False)
 
+# Tests the iterate function.
+# Makes sure when the colIterator reaches 9, the col Iterator is set to 0 and the row iterator is increased 
     def testPuzzleIterator (self) : 
         solver = SudokuSolver(startingPuzzle)
         solver.colIterator = 0

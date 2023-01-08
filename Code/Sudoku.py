@@ -33,31 +33,37 @@ class Item:
     Editable = False
     def __init__(self, value):
 
-        # if a value is equal to ("") then set the value to "blank"
+        # if a value is equal to ("") then set the value to "blank" and editable to True
         if value == "":
             self.Value = "blank"
+            self.Editable = True
+          # if a value is NOT equal to ("") then set the value to the sent value and editable to False
         else: 
             self.Value = value
-
-        # If a value exists when loading in the original then it is not editable
-        if self.Value == "blank" :
-            self.Editable = True
-        else :
             self.Editable = False
+
+
 
 
 # This is the class that will control the main functionality of the program
 class SudokuSolver : 
+#These are the created fields for the Sudoku solver object ------------------------------------------------------------------------------
+
+    #isBacktracking is a boolean to decide whether the program is currently backtracking or not 
+    isBacktracking = False 
+
     #Puzzle will hold the array of numbers 
     puzzle = []
+
+    # Row iterator keeps up with current row the puzzle solver is on
     rowIterator = 0
+
+    # Col iterator keeps up with current Column the puzzle solver is on
     colIterator = 0
-    #List that will tell an iteration when all numbers have been tried (maybe a little bit different than this actually)
-    triedNums = []
+
+    #Holds a list of all of the 3x3 squares in the puzzle
     squares = []
-    def __init__(self):
-        puzzle = [] 
-        triedNums = []
+
      
     #Constructor for the sodoku class
     def __init__(self, startingpuzzle):
@@ -170,7 +176,7 @@ class SudokuSolver :
         return False
        #This method will call all of the check methods and if all of them return false, then a value can be placed there 
     def check(self, value): 
-        if self.checkRow(value) == False :
+        if self.CheckRow(value) == False :
             if self.CheckCol(value) ==False :
                 if self.CheckBox(value) == False :
                     return False
@@ -179,6 +185,7 @@ class SudokuSolver :
             
     # Method to iterate the puzzle solver to the right. If the column iterator has reached the end, reset it and increase the row iterator
     def Iterate(self) : 
+        self.isBacktracking = False
         if(self.colIterator == 8) : 
             self.colIterator = 0
             self.rowIterator +=1 
@@ -189,37 +196,52 @@ class SudokuSolver :
     # method to backtrack in the case that no number can be put into a blank space
     # This method is called when the program realizes it has messed up 
     def Redo(self) : 
+        self.isBacktracking = True
         if(self.colIterator == 0) :
             self.colIterator = 8 
             self.rowIterator -=1
         else : 
             self.colIterator -=1
         return 
-            #This method will control the flow of solving the puzzle. It will decide whether to place a number or not
-    def Main(self, sent):
 
-        if self.puzzle[self.rowIterator][self.colIterator].Editable  == False :
-            self.Iterate()
-            #LOOK INTO HOW TO GET AROUND BACK TRACKING TO A VALUE AND SUBMITTING THE SAME THING 
-            # EXAMPLE: 
-            # 3, 4 ,X 
-            # X doesn't work and the item before it [4] iterates from 1-4 and then selects 4 again
-            # this could cause an endless recursion cycle!!!!!!!!!!!!!!!!!!!!!!!
+    #This method will control the flow of solving the puzzle. It will decide whether to place a number or not
+    def Main(self):
+        #Set the current item here
+        sent = self.puzzle[self.rowIterator][self.colIterator]
+
+        # if the item is not editable, iterate and then 
+        if sent.Editable  == False :
+            if self.isBacktracking == True : 
+                self.Redo()
+            else : 
+                self.Iterate()
+
         else:
+            if sent.Value == "blank" : 
+                sent.Value = 1
             # Begin finding a number to place in the spot 
-            for value in range(1, 10) : 
+            for value in range(sent.Value, 10) : 
+                #if false, then the value is not contained anywhere and can be placed. 
                 if self.check(value) == False : 
-                    #if false, then the value is not contained anywhere and can be placed. 
-
-
-
-            #if no number works, back track until the first editable field is found 
+                    sent.Value = value
+                    self.getSquares() 
+                    break
+            # if the value at this position is still blank, then the puzzle should backtrack and change a previous value      
+            if sent.Value == "blank" : 
+                self.Redo()
+            #If it is not blank then iterate and call main again to repeat the process
+            else: 
+                self.Iterate
         
+
+         
+        #If the puzzle is not finished, then continue the recursion process
+        if sent.Value != "blank" and self.rowIterator != 8 and self.colIterator != 8 :
         #proceed through main 
+            self.Main()
         return 0
  #- end of sodoku class----------------------------------------------------------------------------------------------------------------------------------------------------------       
 
-#puzzle = SudokuSolver(startingPuzzle); 
-
-
+puzzle = SudokuSolver(startingPuzzle) 
+puzzle.Main() 
 
