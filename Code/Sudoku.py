@@ -211,6 +211,7 @@ class SudokuSolver :
             self.colIterator -=1
         return 
 
+#Old main that relied on recursion with the main method.
     #This method will control the flow of solving the puzzle. It will decide whether to place a number or not
 #    def Main(self):
 #        #Set the current item here
@@ -274,7 +275,7 @@ class SudokuSolver :
                     if self.check(value) == False : 
                         self.puzzle[self.rowIterator][self.colIterator].Value = value
                         self.getSquares() 
-                        self.printCurrentPuzzle()
+                        #self.printCurrentPuzzle()
                         break
                     tempNumber +=1
                 # if the value at this position is still blank, then the puzzle should backtrack and change a previous value      

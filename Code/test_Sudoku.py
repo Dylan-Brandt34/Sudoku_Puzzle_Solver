@@ -97,11 +97,18 @@ class PuzzleTest(unittest.TestCase) :
 
     # TO BE TESTED 
     def testPuzzleRedo(self) : 
+        solver = SudokuSolver(startingPuzzle)
+        solver.colIterator = 7
+        solver.Redo()
+        self.assertEqual(solver.colIterator, 6 )
+        solver.rowIterator =1 
+        solver.colIterator = 0
+        solver.Redo() 
+        self.assertEqual(solver.colIterator, 8)
+        self.assertEqual(solver.rowIterator, 0)
         return 0
     
-    def testPuzzleCheck(self) : 
-        return 0 
-    # Maybe test main? 
+    #maybe test a the main function? 
 
 
 if __name__ == '__main__':
