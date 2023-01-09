@@ -51,7 +51,7 @@ class SudokuSolver :
 
     #isBacktracking is a boolean to decide whether the program is currently backtracking or not 
     isBacktracking = False 
-
+    isSolved = False
     #Puzzle will hold the array of numbers 
     puzzle = []
 
@@ -81,9 +81,7 @@ class SudokuSolver :
                 Line.append(x)
             self.puzzle.append(Line)
         print("The puzzle was loaded as follows:")
-        for row in self.puzzle :
-            for item in row:
-                print( str(item.Value) + " " + str(item.Editable) )
+        self.printCurrentPuzzle()
         self.getSquares()
         print("here are the squares")
         for square in self.squares :
@@ -93,6 +91,15 @@ class SudokuSolver :
             print("\n\n\n end of square")
     
 
+    def printCurrentPuzzle(self) : 
+        print("\n\n\n\n\n\n")
+        for row in self.puzzle :
+            tempRow = []
+            
+            for item in row:
+                tempRow.append(item.Value)
+            print(tempRow)
+        print("\n\n\n\n\n\n")
     #This method will take the puzzle and create the nine squares 
     def getSquares(self) :
         #Clear the squares and retrieve them all again 
@@ -205,41 +212,90 @@ class SudokuSolver :
         return 
 
     #This method will control the flow of solving the puzzle. It will decide whether to place a number or not
-    def Main(self):
-        #Set the current item here
-        sent = self.puzzle[self.rowIterator][self.colIterator]
-
-        # if the item is not editable, iterate and then 
-        if sent.Editable  == False :
-            if self.isBacktracking == True : 
-                self.Redo()
-            else : 
-                self.Iterate()
-
-        else:
-            if sent.Value == "blank" : 
-                sent.Value = 1
-            # Begin finding a number to place in the spot 
-            for value in range(sent.Value, 10) : 
-                #if false, then the value is not contained anywhere and can be placed. 
-                if self.check(value) == False : 
-                    sent.Value = value
-                    self.getSquares() 
-                    break
-            # if the value at this position is still blank, then the puzzle should backtrack and change a previous value      
-            if sent.Value == "blank" : 
-                self.Redo()
-            #If it is not blank then iterate and call main again to repeat the process
-            else: 
-                self.Iterate
+#    def Main(self):
+#        #Set the current item here
+#       sent = self.puzzle[self.rowIterator][self.colIterator]
+#
+#        # if the item is not editable, iterate and then 
+#        if sent.Editable  == False :
+#            if self.isBacktracking == True : 
+#                self.Redo()
+#            else : 
+#                self.Iterate()
+#
+#        else:
+#          if sent.Value == "blank" : 
+#                sent.Value = 1
+#            # Begin finding a number to place in the spot 
+#            for value in range(sent.Value, 10) : 
+#                #if false, then the value is not contained anywhere and can be placed. 
+#                if self.check(value) == False : 
+#                    sent.Value = value
+#                    self.getSquares() 
+#                    break
+#            # if the value at this position is still blank, then the puzzle should backtrack and change a previous value      
+#            if sent.Value == "blank" : 
+#                self.Redo()
+#            #If it is not blank then iterate and call main again to repeat the process
+#            else: 
+#                self.Iterate
         
 
          
         #If the puzzle is not finished, then continue the recursion process
-        if sent.Value != "blank" and self.rowIterator != 8 and self.colIterator != 8 :
+#        if sent.Value != "blank" and self.rowIterator != 8 and self.colIterator != 8 :
         #proceed through main 
-            self.Main()
-        return 0
+#            self.Main()
+#        return 0
+
+         #This method will control the flow of solving the puzzle. It will decide whether to place a number or not
+    def Main(self):
+    
+      #loop to iterate through the puzzle solving process
+        while self.isSolved != True : 
+              #Set the current item here
+            sent = self.puzzle[self.rowIterator][self.colIterator]
+            tempNumber = sent.Value
+            # if the item is not editable, iterate and then 
+            if sent.Editable  == False :
+                if self.isBacktracking == True : 
+                    self.Redo()
+                else : 
+                    self.Iterate()
+            # The item is an editable field and will be filled with a number
+            else:
+                #if the field is blank, set the temp number to 1 
+                if sent.Value == "blank" : 
+                    tempNumber = 1
+                # Begin finding a number to place in the spot 
+
+                for value in range(tempNumber, 10) : 
+                    #if false, then the value is not contained anywhere and can be placed. 
+                    if self.check(value) == False : 
+                        self.puzzle[self.rowIterator][self.colIterator].Value = value
+                        self.getSquares() 
+                        self.printCurrentPuzzle()
+                        break
+                    tempNumber +=1
+                # if the value at this position is still blank, then the puzzle should backtrack and change a previous value      
+                if tempNumber == 10 : 
+                    sent.Value = "blank"
+                    self.Redo()
+                #If it is not blank then iterate and call main again to repeat the process
+                else: 
+                    self.Iterate()
+            
+
+            #self.printCurrentPuzzle()
+            #If the puzzle is not finished, then continue the recursion process
+            if sent.Value != "blank" and self.rowIterator == 8 and self.colIterator == 8 :
+            #proceed through main 
+                self.isSolved = True
+                self.printCurrentPuzzle()
+
+
+
+
  #- end of sodoku class----------------------------------------------------------------------------------------------------------------------------------------------------------       
 
 puzzle = SudokuSolver(startingPuzzle) 
