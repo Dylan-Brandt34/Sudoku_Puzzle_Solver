@@ -10,7 +10,7 @@
 #
 
 
-startingPuzzle = [[ 5, 3, "", "", 7, "", "", "", "" ],
+startingPuzzle = [[ 5, 3, "3", "5", 7, "", "", "", "" ],
                   [ 6, "", "", 1, 9, 5, "", "", "" ],
                   [ "", 9, 8, "", "", "", "", 6, "" ], 
                   [ 8, "", "", "", 6, "", "", "", 3 ],
@@ -210,43 +210,6 @@ class SudokuSolver :
         else : 
             self.colIterator -=1
         return 
-
-    #This method will control the flow of solving the puzzle. It will decide whether to place a number or not
-#    def Main(self):
-#        #Set the current item here
-#       sent = self.puzzle[self.rowIterator][self.colIterator]
-#
-#        # if the item is not editable, iterate and then 
-#        if sent.Editable  == False :
-#            if self.isBacktracking == True : 
-#                self.Redo()
-#            else : 
-#                self.Iterate()
-#
-#        else:
-#          if sent.Value == "blank" : 
-#                sent.Value = 1
-#            # Begin finding a number to place in the spot 
-#            for value in range(sent.Value, 10) : 
-#                #if false, then the value is not contained anywhere and can be placed. 
-#                if self.check(value) == False : 
-#                    sent.Value = value
-#                    self.getSquares() 
-#                    break
-#            # if the value at this position is still blank, then the puzzle should backtrack and change a previous value      
-#            if sent.Value == "blank" : 
-#                self.Redo()
-#            #If it is not blank then iterate and call main again to repeat the process
-#            else: 
-#                self.Iterate
-        
-
-         
-        #If the puzzle is not finished, then continue the recursion process
-#        if sent.Value != "blank" and self.rowIterator != 8 and self.colIterator != 8 :
-        #proceed through main 
-#            self.Main()
-#        return 0
 
          #This method will control the flow of solving the puzzle. It will decide whether to place a number or not
     def Main(self):
