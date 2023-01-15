@@ -7,7 +7,7 @@ A program developed in python in order to familiarize myself more with the langu
 
 ## What does it do 
 
-This program will solve a sudoku puzzle (a 2d array). As of right now, the puzzle is hardcoded into he program as a global variable. The solved puzzle is displayed in console. This project is meant to be an ongoing endeavour so there are plans to implement some sort of gui as well as a new way for sudoku puzzle to be read in and solved by the program (like through a .png). 
+This program will solve a sudoku puzzle (a 2d array). As of right now, the puzzle is hardcoded into the program as a global variable. The solved puzzle is displayed in console. This project is meant to be an ongoing endeavour so there are plans to implement some sort of gui as well as a new way for a sudoku puzzle to be read in and solved by the program (like through a .png). 
 
 ## Why did I build this? 
 
