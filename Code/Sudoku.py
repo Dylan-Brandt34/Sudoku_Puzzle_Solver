@@ -1,3 +1,4 @@
+from Item import Item
 # 
 #Sodoku consists of a 9 X 9 grid. Every row contains numbers 1 - 9 and every column has 1-9. No duplicates can exist in either row. 
 # Example of a solved one can be found here https://sandiway.arizona.edu/sudoku/examples.html
@@ -5,12 +6,17 @@
 
 # How does it work:
 #
-# 1.) Recusively call a function that takes (row, column, and index of current check )
-# 2.) Build a new list to build
+# 1.) Constuctor takes in a puzzle (this may be changed to a manual entry)
+# 2.) Sudoku Solver's "Main" function will go through the process of solving the puzzle 
+#           3.) Main will do: 
+#               - keep track of the position of the iterator through the puzzle (currently as two variables local to the Sudoku Solver Object)
+#               - On each iteration, find the first number that can be placed into the position in the puzzle (done through calling the "check" method)
+#               - When no number can fit into a position, Back track backwards and change a previous entry and then move forward again
+# 4.) Step 3 will be repeated until the puzzle is solved
 #
 
 
-startingPuzzle = [[ 5, 3, "3", "5", 7, "", "", "", "" ],
+startingPuzzle = [[ 5, 3, "", "", 7, "", "", "", "" ],
                   [ 6, "", "", 1, 9, 5, "", "", "" ],
                   [ "", 9, 8, "", "", "", "", 6, "" ], 
                   [ 8, "", "", "", 6, "", "", "", 3 ],
@@ -20,30 +26,6 @@ startingPuzzle = [[ 5, 3, "3", "5", 7, "", "", "", "" ],
                   [ "", "", "", 4, 1, 9, 6, 3, 5 ],
                   [ "", "", "", "", 8, "", "", 7, 9]
 ]
-#startingPuzzle = [["",2,4,""],
-#                  [1,"","",3],
-#                  [4,"","",2],
-#                  ["",1,3,""]
-#                ]
-
-
-#This class will represent each an entry in the sudoku puzzle (Maybe use a list?)
-class Item: 
-    Value = 0
-    Editable = False
-    def __init__(self, value):
-
-        # if a value is equal to ("") then set the value to "blank" and editable to True
-        if value == "":
-            self.Value = "blank"
-            self.Editable = True
-          # if a value is NOT equal to ("") then set the value to the sent value and editable to False
-        else: 
-            self.Value = value
-            self.Editable = False
-
-
-
 
 # This is the class that will control the main functionality of the program
 class SudokuSolver : 
@@ -51,7 +33,10 @@ class SudokuSolver :
 
     #isBacktracking is a boolean to decide whether the program is currently backtracking or not 
     isBacktracking = False 
+
+    #isSolved is a boolean that escapes the while loop in main when the project 
     isSolved = False
+
     #Puzzle will hold the array of numbers 
     puzzle = []
 
@@ -128,6 +113,45 @@ class SudokuSolver :
                 square2 = []
                 square3 = []
 
+    #This method is called to find and return the current 3X3 square that the iterator is currently in
+    def getSquare(self) : 
+        tempSquare = []
+        if self.rowIterator < 3 : 
+            if self.colIterator < 3: 
+                tempSquare = self.squares[0]
+            if self.colIterator >= 3 and self.colIterator < 6 :
+                tempSquare = self.squares[1]
+            if self.colIterator >= 6 : 
+                tempSquare = self.squares[2]
+        if self.rowIterator >= 3 and self.rowIterator < 6 : 
+            if self.colIterator < 3: 
+                tempSquare = self.squares[3]
+            if self.colIterator >= 3 and self.colIterator < 6 :
+                tempSquare = self.squares[4]
+            if self.colIterator >= 6 : 
+                tempSquare = self.squares[5]
+        if self.rowIterator >= 6 : 
+            if self.colIterator < 3: 
+                tempSquare = self.squares[6]
+            if self.colIterator >= 3 and self.colIterator < 6 :
+                tempSquare = self.squares[7]
+            if self.colIterator >= 6 : 
+                tempSquare = self.squares[8]
+        return tempSquare
+    #this method is called when a square is updated in the puzzle (maybe remove the square list all together)
+    def updateSquare(self, value): 
+        tempsquare = self.getSquare()
+        position=(self.rowIterator%3)*3 + self.colIterator%3 #This might be a way to not use lists at all
+        tempsquare[position].value = value
+
+    #This method will check the "square" the item is in and return whether that number can be placed 
+    def CheckSquare(self, value): 
+        tempSquare = self.getSquare()
+        for item in tempSquare : 
+            if item.Value == value :
+                return True     
+        #if the end of the for loop is reached, then the value is not contained in the row.
+        return False
     #This method will check the row and return if the item can be placed there 
     # Takes in the row iterator and a value. Returns whether the value exists in
     def CheckRow(self, value): 
@@ -151,41 +175,11 @@ class SudokuSolver :
         #if the end of the for loop is reached, then the value is not contained in the row.
         return False
 
-    
-    #This method will check the "square" the item is in and return whether that number can be placed 
-    def CheckBox(self, value): 
-        tempSquare = []
-        if self.rowIterator < 3 : 
-            if self.colIterator < 3: 
-                tempSquare = self.squares[0]
-            if self.colIterator > 3 and self.colIterator < 6 :
-                tempSquare = self.squares[1]
-            if self.colIterator >= 6 : 
-                tempSquare = self.squares[2]
-        if self.rowIterator > 3 and self.rowIterator < 6 : 
-            if self.colIterator < 3: 
-                tempSquare = self.squares[3]
-            if self.colIterator > 3 and self.colIterator < 6 :
-                tempSquare = self.squares[4]
-            if self.colIterator >= 6 : 
-                tempSquare = self.squares[5]
-        if self.rowIterator >= 6 : 
-            if self.colIterator < 3: 
-                tempSquare = self.squares[6]
-            if self.colIterator > 3 and self.colIterator < 6 :
-                tempSquare = self.squares[7]
-            if self.colIterator >= 6 : 
-                tempSquare = self.squares[8]
-        for item in tempSquare : 
-            if item.Value == value :
-                return True     
-        #if the end of the for loop is reached, then the value is not contained in the row.
-        return False
        #This method will call all of the check methods and if all of them return false, then a value can be placed there 
     def check(self, value): 
         if self.CheckRow(value) == False :
             if self.CheckCol(value) ==False :
-                if self.CheckBox(value) == False :
+                if self.CheckSquare(value) == False :
                     return False
         else: 
             return True
@@ -236,7 +230,8 @@ class SudokuSolver :
                     #if false, then the value is not contained anywhere and can be placed. 
                     if self.check(value) == False : 
                         self.puzzle[self.rowIterator][self.colIterator].Value = value
-                        self.getSquares() 
+                        #self.getSquares() 
+                        self.updateSquare(value)
                         self.printCurrentPuzzle()
                         break
                     tempNumber +=1
